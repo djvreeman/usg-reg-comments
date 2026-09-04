@@ -44,7 +44,7 @@ bun run src/cli.ts pipeline <document-id> -m gemini-3-flash -c 20 --no-clusterin
    cd dashboard && bunx vite --port 3002
    ```
 
-2. **Deploy**: Upload the DB file to the Google Drive `regulations-dbs` folder, then push to trigger the GitHub Actions build (`scripts/build-all-dashboards.sh`).
+2. **Deploy**: Build locally with `scripts/build-all-dashboards.sh` (or copy `dist/data` into `dashboard/public/data` and run Vite). Host the static output wherever you prefer — this fork does **not** use the upstream Google Drive + GitHub Pages Actions workflow.
 
 ### Resuming after failure
 
