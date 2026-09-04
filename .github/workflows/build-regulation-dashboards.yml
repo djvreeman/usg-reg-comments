@@ -1,0 +1,95 @@
+name: Build Regulation Dashboards
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+        
+    - name: Install dependencies
+      run: |
+        bun install
+        cd dashboard && bun install
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+        
+    - name: Download SQLite databases from Google Drive
+      run: |
+        # Install gdown for downloading from Google Drive
+        pip install --upgrade gdown
+        
+        # Run the download script
+        ./scripts/download-databases.sh
+        
+        # Verify databases were downloaded
+        if [ ! -d "dbs" ] || [ -z "$(ls -A dbs/*.sqlite 2>/dev/null)" ]; then
+          echo "::error::No SQLite databases found in dbs/ directory"
+          exit 1
+        fi
+        
+    - name: Build data and dashboards for each regulation
+      env:
+        REGSGOV_API_KEY: ${{ secrets.REGSGOV_API_KEY }}
+      run: |
+        # Use the shared build script
+        ./scripts/build-all-dashboards.sh --skip-install
+        
+    - name: Build FloodGate app
+      run: |
+        # Build the FloodGate form letter generation app
+        ./scripts/build-floodgate.sh
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: regulation-dashboards
+        path: dist/
+        retention-days: 30
+        
+    - name: Setup Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/configure-pages@v4
+      
+    - name: Upload Pages artifact
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./dist
+        
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4 

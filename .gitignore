@@ -1,0 +1,48 @@
+# --- Dependencies ---
+node_modules/
+browser/node_modules/
+dashboard/node_modules/
+
+# --- Build artifacts / bundles ---
+browser/dist/
+browser/src/styles/output.css
+dist/
+dashboard/dist/
+dashboard/public/
+debug/
+
+# --- Bun / lock files ---
+bun.lock*
+
+# --- Databases & generated analysis data ---
+*.sqlite*
+*.db
+dbs/
+output*/
+progress/
+local-site/
+site-overviews/
+site-fonts/
+
+# --- Proprietary / local font binaries (keep Gotham name in CSS; do not commit files) ---
+*.woff
+*.woff2
+*.otf
+*.ttf
+*.eot
+assets/
+
+# --- Sample / bulk downloads (optional local only) ---
+*.csv
+
+# --- Logs ---
+*.log
+
+# --- Environment ---
+.env
+.env.*
+!.env.example
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db

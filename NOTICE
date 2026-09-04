@@ -1,0 +1,20 @@
+usg-reg-comments
+================
+
+This repository is a fork of Josh Mandel's regulations.gov comment analysis
+pipeline:
+
+  https://github.com/jmandel/regulations.gov-comment-browser
+
+Original work Copyright (c) Josh Mandel, licensed under the MIT License.
+
+Modifications and additions in this fork Copyright (c) Daniel J. Vreeman,
+also under the MIT License (see LICENSE).
+
+Fonts
+-----
+
+The UI font stack prefers "HCo Gotham" when available, with system UI /
+sans-serif fallbacks. Proprietary Gotham font binaries are NOT distributed
+in this repository. Supply licensed font files privately at deploy time if
+you need Gotham rendering.
