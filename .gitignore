@@ -11,8 +11,8 @@ dashboard/dist/
 dashboard/public/
 debug/
 
-# --- Bun / lock files ---
-bun.lock*
+# --- Bun ---
+# Keep bun.lock committed for reproducible installs.
 
 # --- Databases & generated analysis data ---
 *.sqlite*
@@ -46,3 +46,6 @@ assets/
 # --- OS junk ---
 .DS_Store
 Thumbs.db
+
+# Optional local dashboard sample tarball
+dashboard/d.tgz
